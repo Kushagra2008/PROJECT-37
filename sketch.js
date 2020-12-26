@@ -23,10 +23,10 @@ function preload()
   dogImg1 = loadImage('dogImg.png');
   dogImg2 = loadImage('dogImg1.png');
 
-  bg1 = loadImage("Bed Room.png")
-  bg2 = loadImage("Garden.png")
-  bg3 = loadImage("Living Room.png")
-  bg4 = loadImage("Wash Room.png");
+  bg1 = loadImage("images/Bed Room.png")
+  bg2 = loadImage("images/Garden.png")
+  bg3 = loadImage("images/Living Room.png")
+  bg4 = loadImage("images/Wash Room.png");
 }
 
 function setup() {
@@ -41,7 +41,13 @@ function setup() {
 
   database.ref('Food').on('value', readStock)
 
-  gamestateRead = database.ref("/")
+  database.ref("lastFed").on("value", function(data)
+    {
+      lastFed = data.val();
+    }
+  )
+
+  gamestateRead = database.ref("GameState")
   gamestateRead.on("value", function(data)
   {
     gamestateChange = data.val();
@@ -60,19 +66,13 @@ function draw()
 {
   background(46, 139, 87);
 
-    database.ref("lastFed").on("value", function(data)
-    {
-      lastFed = data.val();
-    }
-    )
-
     currentTime = hour();
     if (currentTime == lastFed)
     {
       update("LivingRoom")
       foodObj.livingRoom();
     }
-    if (currentTime == lastFed+1)
+    else if (currentTime == lastFed+1)
     {
       update("Playing")
       foodObj.garden()
@@ -98,19 +98,22 @@ function draw()
 
     if (gamestateChange == "Hungry")
     {
-      background(46, 139, 87);
+      //background(46, 139, 87);
       foodObj.display()
       feed.show()
       addFood.show()
       // To show thw dog
-      show()
+      // show()
+      dogSprite.addImage(dogImg1)
+      dogSprite.x = width/2
     }
     else
     {
       feed.hide()
       addFood.hide()
       // To remove the dog
-      remove()
+      //h
+      dogSprite.remove()
     }
 
     if (lastFed >= 12)
@@ -156,21 +159,21 @@ function draw()
   {
     if (foodS >= 0)
     {
-      gamestateChange = "LivingRoom"
       foodObj.buttonPressed = true;
       dogSprite.addImage(dogImg2)
       console.log("FeedDog is working")
       foodS -= 1;
+      foodObj.updateFoodStock(foodS)
       if (foodS <= 0)
       {
         foodS = 0;
       } 
-      lastFed = hour(); 
-    foodObj.updateFoodStock(foodS)
+      lastFed = hour()
       database.ref("/").update(
         {
           'Food': foodObj.getFoodStock(),
-          'lastFed': lastFed
+          'lastFed': lastFed,
+          'GameState': "Hungry"
         }
       )
     }
@@ -194,5 +197,4 @@ function remove()
 {
   dogSprite.x = 2000;
 }
-
     

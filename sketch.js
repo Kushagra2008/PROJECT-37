@@ -23,10 +23,10 @@ function preload()
   dogImg1 = loadImage('dogImg.png');
   dogImg2 = loadImage('dogImg1.png');
 
-  bg1 = loadImage("images/Bed Room.png")
-  bg2 = loadImage("images/Garden.png")
-  bg3 = loadImage("images/Living Room.png")
-  bg4 = loadImage("images/Wash Room.png");
+  bg1 = loadImage("Bed Room.png")
+  bg2 = loadImage("Garden.png")
+  bg3 = loadImage("Living Room.png")
+  bg4 = loadImage("Wash Room.png");
 }
 
 function setup() {
